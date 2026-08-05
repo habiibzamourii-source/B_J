@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Supervision Pro - Dashboard des Tickets</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+
+  <!-- Overlay d'arrière-plan pour fermer le dashboard sur mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- DASHBOARD LATÉRAL À GAUCHE -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand-logo">📊</div>
+        <div class="brand-text">
+          <h1>Supervision</h1>
+        </div>
+      </div>
+      <button class="btn-close-sidebar" onclick="toggleSidebar()">✕</button>
+    </div>
+
+    <!-- NAVIGATION PRINCIPALE (Tous les postes supprimé) -->
+    <nav class="sidebar-nav">
+      <button class="tab-btn active" data-tab="p1" onclick="switchTab('p1')">💻 Poste 01</button>
+      <button class="tab-btn" data-tab="p2" onclick="switchTab('p2')">💻 Poste 02</button>
+      <button class="tab-btn" data-tab="cotes" onclick="switchTab('cotes')">📈 Cotes & Gains</button>
+    </nav>
+
+    <!-- VUE CONSOLIDÉE & BILAN FINANCIER SOUS FORME DE TABLEAU MASQUABLE -->
+    <div class="sidebar-widget">
+      <div class="widget-header" onclick="toggleBilanTable()">
+        <span>📊 Bilan Financier</span>
+        <span class="chevron-icon" id="bilan-chevron">▼</span>
+      </div>
+      <div class="widget-content" id="bilan-table-wrapper">
+        <table class="bilan-table">
+          <tbody>
+            <tr>
+              <td>Brut Total</td>
+              <td id="cotes-gross">0 DT</td>
+            </tr>
+            <tr>
+              <td>Annulés Total</td>
+              <td id="cotes-cancelled" class="text-danger">0 DT</td>
+            </tr>
+            <tr>
+              <td>Recette Nette</td>
+              <td id="cotes-net" class="text-success">0 DT</td>
+            </tr>
+            <tr>
+              <td>Total Tickets</td>
+              <td id="cotes-total-count">0</td>
+            </tr>
+            <tr>
+              <td>Gains Poste 1</td>
+              <td id="cotes-gains-p1" class="text-warning">0 DT</td>
+            </tr>
+            <tr>
+              <td>Gains Poste 2</td>
+              <td id="cotes-gains-p2" class="text-warning">0 DT</td>
+            </tr>
+            <tr>
+              <td>Total Gains</td>
+              <td id="cotes-gains-total" class="text-warning">0 DT</td>
+            </tr>
+            <tr class="highlight-row">
+              <td><strong>Bénéfice du Jour</strong></td>
+              <td id="cotes-profit" class="text-profit"><strong>0 DT</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENEUR PRINCIPAL -->
+  <div class="app-wrapper">
+    
+    <!-- EN-TÊTE PRINCIPAL (NAVBAR) -->
+    <header class="navbar">
+      <div class="navbar-left">
+        <button class="btn-toggle-sidebar" onclick="toggleSidebar()">☰ Menu</button>
+        <span class="live-indicator"><span class="dot"></span> En direct</span>
+      </div>
+
+      <div class="navbar-actions">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Rechercher code, pays, course...">
+        </div>
+
+        <div class="action-buttons-group">
+          <button id="refresh-admin-btn" class="btn-primary">
+            <span class="btn-icon">🔄</span>
+            <span class="btn-text">Actualiser</span>
+          </button>
+
+          <button id="delete-all-btn" class="btn-danger" onclick="deleteAllTickets()">
+            <span class="btn-icon">🗑️</span>
+            <span class="btn-text">Tout supprimer</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENEUR PRINCIPAL DES PANNEAUX -->
+    <main class="postes-grid view-p1" id="postes-grid">
+
+      <!-- SECTION POSTE 1 -->
+      <section class="poste-panel" id="panel-p1">
+        <div class="panel-header p1-accent">
+          <div class="panel-title">
+            <span class="badge-poste p1">POSTE 01</span>
+            <h2>Table : <code>tickets</code></h2>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-title">Brut</span>
+            <span class="kpi-value" id="p1-gross">0 DT</span>
+          </div>
+          <div class="kpi-card danger">
+            <span class="kpi-title">Annulés</span>
+            <span class="kpi-value" id="p1-cancelled">0 DT</span>
+            <span class="kpi-sub" id="p1-cancelled-count">0 ticket(s)</span>
+          </div>
+          <div class="kpi-card success">
+            <span class="kpi-title">Recette Nette</span>
+            <span class="kpi-value" id="p1-net">0 DT</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-title">Tickets</span>
+            <span class="kpi-value" id="p1-total-count">0</span>
+          </div>
+        </div>
+
+        <div class="groups-container">
+          <div class="section-title">
+            <span>📁 GROUPES DE COURSES</span>
+          </div>
+          <div id="p1-groups-list" class="accordion-list">
+            <div class="loading-state">Chargement du Poste 1...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION POSTE 2 -->
+      <section class="poste-panel" id="panel-p2">
+        <div class="panel-header p2-accent">
+          <div class="panel-title">
+            <span class="badge-poste p2">POSTE 02</span>
+            <h2>Table : <code>tickets2</code></h2>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-title">Brut</span>
+            <span class="kpi-value" id="p2-gross">0 DT</span>
+          </div>
+          <div class="kpi-card danger">
+            <span class="kpi-title">Annulés</span>
+            <span class="kpi-value" id="p2-cancelled">0 DT</span>
+            <span class="kpi-sub" id="p2-cancelled-count">0 ticket(s)</span>
+          </div>
+          <div class="kpi-card success">
+            <span class="kpi-title">Recette Nette</span>
+            <span class="kpi-value" id="p2-net">0 DT</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-title">Tickets</span>
+            <span class="kpi-value" id="p2-total-count">0</span>
+          </div>
+        </div>
+
+        <div class="groups-container">
+          <div class="section-title">
+            <span>📁 GROUPES DE COURSES</span>
+          </div>
+          <div id="p2-groups-list" class="accordion-list">
+            <div class="loading-state">Chargement du Poste 2...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION COTES ET GAINS -->
+      <section class="poste-panel" id="panel-cotes">
+        <div class="groups-container">
+          <div class="section-title">
+            <span>📁 GROUPES DE COURSES COMBINÉS (Maintien long pour ouvrir les cotes)</span>
+          </div>
+          <div id="cotes-groups-list" class="accordion-list">
+            <div class="loading-state">Chargement de la vue globale...</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
