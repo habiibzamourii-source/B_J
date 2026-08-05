@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Supervision Pro - Dashboard des Tickets</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+</head>
+<body>
+
+  <div class="app-wrapper">
+    
+    <!-- EN-TÊTE PRINCIPAL (NAVBAR) -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="brand-logo">📊</div>
+        <div class="brand-text">
+          <h1>Supervision Live</h1>
+          <span class="live-indicator"><span class="dot"></span> En direct</span>
+        </div>
+      </div>
+
+      <div class="navbar-actions">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Rechercher code, pays, course...">
+        </div>
+
+        <div class="action-buttons-group">
+          <button id="refresh-admin-btn" class="btn-primary">
+            <span class="btn-icon">🔄</span>
+            <span class="btn-text">Actualiser</span>
+          </button>
+
+          <button id="delete-all-btn" class="btn-danger" onclick="deleteAllTickets()">
+            <span class="btn-icon">🗑️</span>
+            <span class="btn-text">Tout supprimer</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- NAVIGATION PAR ONGLETS (STICKY CONTROL) -->
+    <nav class="view-tabs">
+      <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">🌐 Tous les postes</button>
+      <button class="tab-btn" data-tab="p1" onclick="switchTab('p1')">💻 Poste 01</button>
+      <button class="tab-btn" data-tab="p2" onclick="switchTab('p2')">💻 Poste 02</button>
+      <button class="tab-btn" data-tab="cotes" onclick="switchTab('cotes')">📈 Cotes & Gains</button>
+    </nav>
+
+    <!-- CONTENEUR PRINCIPAL DES PANNEAUX -->
+    <main class="postes-grid view-all" id="postes-grid">
+
+      <!-- SECTION POSTE 1 -->
+      <section class="poste-panel" id="panel-p1">
+        <div class="panel-header p1-accent">
+          <div class="panel-title">
+            <span class="badge-poste p1">POSTE 01</span>
+            <h2>Table : <code>tickets</code></h2>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-title">Brut</span>
+            <span class="kpi-value" id="p1-gross">0 DT</span>
+          </div>
+          <div class="kpi-card danger">
+            <span class="kpi-title">Annulés</span>
+            <span class="kpi-value" id="p1-cancelled">0 DT</span>
+            <span class="kpi-sub" id="p1-cancelled-count">0 ticket(s)</span>
+          </div>
+          <div class="kpi-card success">
+            <span class="kpi-title">Recette Nette</span>
+            <span class="kpi-value" id="p1-net">0 DT</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-title">Tickets</span>
+            <span class="kpi-value" id="p1-total-count">0</span>
+          </div>
+        </div>
+
+        <div class="groups-container">
+          <div class="section-title">
+            <span>📁 GROUPES DE COURSES</span>
+          </div>
+          <div id="p1-groups-list" class="accordion-list">
+            <div class="loading-state">Chargement du Poste 1...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION POSTE 2 -->
+      <section class="poste-panel" id="panel-p2">
+        <div class="panel-header p2-accent">
+          <div class="panel-title">
+            <span class="badge-poste p2">POSTE 02</span>
+            <h2>Table : <code>tickets2</code></h2>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-title">Brut</span>
+            <span class="kpi-value" id="p2-gross">0 DT</span>
+          </div>
+          <div class="kpi-card danger">
+            <span class="kpi-title">Annulés</span>
+            <span class="kpi-value" id="p2-cancelled">0 DT</span>
+            <span class="kpi-sub" id="p2-cancelled-count">0 ticket(s)</span>
+          </div>
+          <div class="kpi-card success">
+            <span class="kpi-title">Recette Nette</span>
+            <span class="kpi-value" id="p2-net">0 DT</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-title">Tickets</span>
+            <span class="kpi-value" id="p2-total-count">0</span>
+          </div>
+        </div>
+
+        <div class="groups-container">
+          <div class="section-title">
+            <span>📁 GROUPES DE COURSES</span>
+          </div>
+          <div id="p2-groups-list" class="accordion-list">
+            <div class="loading-state">Chargement du Poste 2...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION COTES ET GAINS -->
+      <section class="poste-panel" id="panel-cotes">
+        
+        <!-- GROUPE ACCORDÉON : BILAN FINANCIER & RESUME CONSOLIDE -->
+        <div class="group-accordion open" id="summary-cotes-accordion">
+          
+          <div class="group-header cotes-header-accordion" onclick="toggleSummaryAccordion()">
+            <div class="group-title">
+              <span class="badge-poste cotes">COTES</span>
+              <span class="course-title">Vue Consolidée & Bilan Financier</span>
+            </div>
+            <div class="group-metrics">
+              <span class="chevron-icon">▼</span>
+            </div>
+          </div>
+
+          <div class="group-content p-20">
+            <!-- KPI D'ENSEMBLE & GAINS -->
+            <div class="kpi-grid kpi-grid-extended">
+              <div class="kpi-card">
+                <span class="kpi-title">Brut Total</span>
+                <span class="kpi-value" id="cotes-gross">0 DT</span>
+              </div>
+              <div class="kpi-card danger">
+                <span class="kpi-title">Annulés Total</span>
+                <span class="kpi-value" id="cotes-cancelled">0 DT</span>
+                <span class="kpi-sub" id="cotes-cancelled-count">0 ticket(s)</span>
+              </div>
+              <div class="kpi-card success">
+                <span class="kpi-title">Recette Nette Totale</span>
+                <span class="kpi-value" id="cotes-net">0 DT</span>
+              </div>
+              <div class="kpi-card">
+                <span class="kpi-title">Total Tickets</span>
+                <span class="kpi-value" id="cotes-total-count">0</span>
+              </div>
+
+              <!-- KPIS DES GAINS ET DU BÉNÉFICE -->
+              <div class="kpi-card warning">
+                <span class="kpi-title">Gains Poste 1</span>
+                <span class="kpi-value" id="cotes-gains-p1">0 DT</span>
+              </div>
+              <div class="kpi-card warning">
+                <span class="kpi-title">Gains Poste 2</span>
+                <span class="kpi-value" id="cotes-gains-p2">0 DT</span>
+              </div>
+              <div class="kpi-card warning">
+                <span class="kpi-title">Total Gains (P1 + P2)</span>
+                <span class="kpi-value" id="cotes-gains-total">0 DT</span>
+              </div>
+              
+              <div class="kpi-card profit-card" id="kpi-profit-card">
+                <span class="kpi-title">Bénéfice du Jour</span>
+                <span class="kpi-value" id="cotes-profit">0 DT</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="groups-container">
+          <div class="section-title">
+            <span>📁 GROUPES DE COURSES COMBINÉS</span>
+          </div>
+          <div id="cotes-groups-list" class="accordion-list">
+            <div class="loading-state">Chargement de la vue globale...</div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+  <script>
+    // Fonction d'ouverture/fermeture du groupe Bilan
+    function toggleSummaryAccordion() {
+      const accordion = document.getElementById('summary-cotes-accordion');
+      if (accordion) {
+        accordion.classList.toggle('open');
+      }
+    }
+  </script>
+</body>
+</html>
