@@ -409,3 +409,73 @@ body {
   .cotes-input { padding: 10px 8px; font-size: 1.1rem; }
   .sidebar { width: 85vw; }
 }
+/* ESPACEMENT ET MARGES DANS L'ONGLET COTES & GAINS */
+#panel-cotes .accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espace agrandi entre chaque groupe */
+  padding: 10px 0;
+}
+
+#panel-cotes .group-accordion {
+  border-width: 2px;
+  border-style: solid;
+  border-radius: var(--radius-md);
+  margin-bottom: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Légère ombre pour aérer visuellement */
+}
+
+/* TAILLES NORMALES POUR LES METRICS DE GROUPE DANS COTES & GAINS */
+#panel-cotes .net-amount {
+  font-size: 0.95rem !important; /* Taille normale */
+  padding: 4px 8px !important;
+  font-weight: 700;
+}
+
+#panel-cotes .group-estimated-gain-badge {
+  font-size: 0.95rem !important; /* Taille normale */
+  padding: 4px 8px !important;
+  font-weight: 700;
+  box-shadow: none !important;
+}
+
+#panel-cotes .group-estimated-gain-badge::before {
+  font-size: 0.7rem !important;
+}
+
+/* PALETTE DE COULEURS DYNAMIQUES POUR LES GROUPES COTES & GAINS */
+/* Thème 0 - Émeraude */
+.cotes-theme-0 { border-color: #059669 !important; }
+.cotes-theme-0 .group-header { background: #ecfdf5 !important; }
+.cotes-theme-0.open .group-header { background: #d1fae5 !important; }
+.cotes-theme-0 .group-estimated-gain-badge { background: #047857 !important; }
+
+/* Thème 1 - Bleu Indigo */
+.cotes-theme-1 { border-color: #4f46e5 !important; }
+.cotes-theme-1 .group-header { background: #eef2ff !important; }
+.cotes-theme-1.open .group-header { background: #e0e7ff !important; }
+.cotes-theme-1 .group-estimated-gain-badge { background: #4338ca !important; }
+
+/* Thème 2 - Violet/Indigo */
+.cotes-theme-2 { border-color: #7c3aed !important; }
+.cotes-theme-2 .group-header { background: #f5f3ff !important; }
+.cotes-theme-2.open .group-header { background: #ede9fe !important; }
+.cotes-theme-2 .group-estimated-gain-badge { background: #6d28d9 !important; }
+
+/* Thème 3 - Ambre/Orange */
+.cotes-theme-3 { border-color: #d97706 !important; }
+.cotes-theme-3 .group-header { background: #fffbeb !important; }
+.cotes-theme-3.open .group-header { background: #fef3c7 !important; }
+.cotes-theme-3 .group-estimated-gain-badge { background: #b45309 !important; }
+
+/* Thème 4 - Cyan/Teal */
+.cotes-theme-4 { border-color: #0d9488 !important; }
+.cotes-theme-4 .group-header { background: #f0fdfa !important; }
+.cotes-theme-4.open .group-header { background: #ccfbf1 !important; }
+.cotes-theme-4 .group-estimated-gain-badge { background: #0f766e !important; }
+
+/* Thème 5 - Rose/Rouge Sombre */
+.cotes-theme-5 { border-color: #e11d48 !important; }
+.cotes-theme-5 .group-header { background: #fff1f2 !important; }
+.cotes-theme-5.open .group-header { background: #ffe4e6 !important; }
+.cotes-theme-5 .group-estimated-gain-badge { background: #be123c !important; }
