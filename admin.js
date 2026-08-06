@@ -488,7 +488,7 @@ function renderPoste(tickets, prefix) {
 
   const isCotesView = (prefix === 'cotes');
 
-  keys.forEach(key => {
+keys.forEach((key, index) => {
     const group = groups[key];
     const safeKey = key.replace(/[^a-zA-Z0-9]/g, '_');
     const groupId = `${prefix}-grp-${safeKey}`;
@@ -500,7 +500,7 @@ function renderPoste(tickets, prefix) {
       <div class="cotes-panel-container">
         <div class="cotes-panel-title">
           <span>📈 Tableau des Cotes - ${group.pays} (${group.course})</span>
-          <span style="font-size:1rem; color:#047857; font-weight:800;">
+          <span style="font-size:0.95rem; color:#047857; font-weight:800;">
             Gain Groupe Estimé : <strong id="${groupId}-total-gain">0 DT</strong>
           </span>
         </div>
@@ -551,10 +551,13 @@ function renderPoste(tickets, prefix) {
     ` : '';
 
     const card = document.createElement('div');
-    card.className = 'group-accordion';
+    
+    // Attribution de la classe de couleur propre à chaque groupe dans Cotes & Gains
+    const themeClass = isCotesView ? `cotes-theme-${index % 6}` : '';
+    card.className = `group-accordion ${themeClass}`.trim();
     card.id = groupId;
 
-    // Ajout du badge spécifique pour le Gain sur l'en-tête du groupe
+    // Badge spécifique pour le Gain sur l'en-tête du groupe
     const groupHeaderGainHTML = isCotesView 
       ? `<span class="group-estimated-gain-badge" id="${groupId}-header-gain" style="display:none;">0 DT</span>`
       : '';
