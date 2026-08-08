@@ -583,4 +583,104 @@ body {
     padding: 8px 6px;
     font-size: 1rem;
   }
+} 
+/* =========================================================
+   OPTIMISATION MOBILE (ÉCRANS TELEPHONE < 600px)
+   ========================================================= */
+@media (max-width: 600px) {
+
+  /* Ajustement global de l'en-tête de groupe */
+  #panel-cotes .group-header {
+    padding: 10px 12px !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  /* Colonne Gauche */
+  #panel-cotes .group-title {
+    gap: 6px !important;
+    max-width: 65% !important; /* Laisse de la place pour le badge de gain à droite */
+  }
+
+  /* Ligne 1 : Pays, Course, Nb Tickets */
+  .cotes-line-1 {
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+  }
+
+  #panel-cotes .badge-country {
+    padding: 3px 7px !important;
+    font-size: 0.75rem !important;
+  }
+
+  #panel-cotes .course-title {
+    font-size: 0.95rem !important;
+  }
+
+  #panel-cotes .tickets-count {
+    font-size: 0.75rem !important;
+    padding: 2px 6px !important;
+  }
+
+  /* Ligne 2 : Montant Net + Bouton 📈 au milieu */
+  .cotes-line-2 {
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  #panel-cotes .net-amount {
+    padding: 3px 7px !important;
+    font-size: 0.85rem !important;
+  }
+
+  #panel-cotes .btn-toggle-cotes {
+    padding: 2px 6px !important;
+    font-size: 0.95rem !important;
+    border-width: 1px !important;
+  }
+
+  /* Colonne Droite : Gain & Chevron */
+  #panel-cotes .group-metrics {
+    gap: 6px !important;
+    max-width: 35% !important;
+  }
+
+  /* Badge de Gain adapté mobile */
+  #panel-cotes .group-estimated-gain-badge {
+    padding: 4px 8px !important;
+    font-size: 0.8rem !important;
+    border-radius: 5px !important;
+    text-align: right !important;
+  }
+
+  #panel-cotes .group-estimated-gain-badge::before {
+    font-size: 0.6rem !important;
+  }
+
+  /* Adaptations du Tableau de Cotes sur mobile */
+  #panel-cotes .cotes-panel-container {
+    padding: 10px 8px !important;
+  }
+
+  #panel-cotes .cotes-table th, 
+  #panel-cotes .cotes-table td {
+    padding: 8px 6px !important;
+    font-size: 0.8rem !important;
+  }
+
+  #panel-cotes .cotes-input {
+    padding: 6px 6px !important;
+    font-size: 0.95rem !important;
+  }
+
+  /* Code pill & Montant des tickets */
+  .code-pill {
+    padding: 4px 8px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .calculated-gain-badge {
+    padding: 4px 8px !important;
+    font-size: 0.85rem !important;
+  }
 }
