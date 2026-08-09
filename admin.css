@@ -657,30 +657,5 @@ body {
     font-size: 0.6rem !important;
   }
 
-  /* Adaptations du Tableau de Cotes sur mobile */
-  #panel-cotes .cotes-panel-container {
-    padding: 10px 8px !important;
-  }
-
-  #panel-cotes .cotes-table th, 
-  #panel-cotes .cotes-table td {
-    padding: 8px 6px !important;
-    font-size: 0.8rem !important;
-  }
-
-  #panel-cotes .cotes-input {
-    padding: 6px 6px !important;
-    font-size: 0.95rem !important;
-  }
-
-  /* Code pill & Montant des tickets */
-  .code-pill {
-    padding: 4px 8px !important;
-    font-size: 0.85rem !important;
-  }
-
-  .calculated-gain-badge {
-    padding: 4px 8px !important;
-    font-size: 0.85rem !important;
-  }
+ 
 }
