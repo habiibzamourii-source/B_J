@@ -27,7 +27,6 @@
         <div class="brand-text">
           <h1>Supervision</h1>
           <h7> 13/04 ==> 13/05 : Payé </h7>
-         
         </div>
       </div>
       <button class="btn-close-sidebar" onclick="toggleSidebar()">✕</button>
@@ -96,7 +95,7 @@
         <button class="btn-toggle-sidebar" onclick="toggleSidebar()">☰ Menu</button>
         <span class="live-indicator"><span class="dot"></span> En direct</span>
 
-        <!-- BOUTON AJOUTÉ À CÔTÉ DE "EN DIRECT" -->
+        <!-- BOUTON DE GESTION -->
         <button class="btn-primary" onclick="openRefCoursesModal()" style="padding: 6px 12px; font-size: 0.85rem; height: auto; min-height: unset; margin-left: 10px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
           ➕ Gérer Pays / Course
         </button>
@@ -218,41 +217,68 @@
     </main>
   </div>
 
-  <!-- MODALE COMPLÈTE GESTION PAYS & COURSES -->
-  <div class="modal-overlay" id="ref-modal-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center;" onclick="closeRefCoursesModal()">
-    <div class="modal-content" onclick="event.stopPropagation()" style="background: #ffffff; padding: 20px; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); font-family: 'Plus Jakarta Sans', sans-serif;">
+  <!-- MODALE COMPLÈTE GESTION PAYS & COURSES (DESIGN MODERNE ET RESPONSIVE) -->
+  <div class="modal-overlay ref-modal-overlay" id="ref-modal-overlay" onclick="closeRefCoursesModal()">
+    <div class="modal-content ref-modal-content" onclick="event.stopPropagation()">
       
-      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; margin-bottom: 16px;">
-        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #1f2937;">🌍 Gérer les Pays et Courses</h3>
-        <button class="btn-close-modal" onclick="closeRefCoursesModal()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #6b7280;">✕</button>
+      <!-- Poignée visuelle pour glissement mobile -->
+      <div class="mobile-drag-handle"></div>
+
+      <div class="modal-header ref-modal-header">
+        <div class="ref-header-title">
+          <span class="ref-header-icon">🌍</span>
+          <div>
+            <h3>Référentiel Pays & Courses</h3>
+            <p class="ref-header-sub">Gestion de la table : <code>courses</code></p>
+          </div>
+        </div>
+        <button class="btn-close-modal" onclick="closeRefCoursesModal()" aria-label="Fermer">✕</button>
       </div>
 
-      <div class="modal-body">
-        <!-- FORMULAIRE DE SAISIE (AJOUT / MODIFICATION) -->
-        <form id="ref-course-form" onsubmit="handleSaveRefCourse(event)" style="display: flex; gap: 8px; margin-bottom: 20px;">
+      <div class="modal-body ref-modal-body">
+        <!-- FORMULAIRE DE SAISIE -->
+        <form id="ref-course-form" onsubmit="handleSaveRefCourse(event)" class="ref-form">
           <input type="hidden" id="ref-id">
-          <input type="text" id="ref-pays" placeholder="Pays (ex: France)" required class="cotes-input" style="flex:1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.9rem;">
-          <input type="text" id="ref-course" placeholder="Course (ex: C1)" required class="cotes-input" style="flex:1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.9rem;">
+          <div class="ref-form-inputs">
+            <div class="ref-input-group">
+              <label for="ref-pays">Pays</label>
+              <input type="text" id="ref-pays" placeholder="Ex: France" required class="ref-input">
+            </div>
+            <div class="ref-input-group">
+              <label for="ref-course">Course</label>
+              <input type="text" id="ref-course" placeholder="Ex: C1" required class="ref-input">
+            </div>
+          </div>
           
-          <button type="submit" id="ref-submit-btn" class="btn-primary" style="padding: 10px 16px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; white-space: nowrap;">➕ Ajouter</button>
-          <button type="button" id="ref-cancel-btn" onclick="resetRefForm()" class="btn-danger" style="display:none; padding: 10px 16px; background-color: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Annuler</button>
+          <div class="ref-form-actions">
+            <button type="submit" id="ref-submit-btn" class="btn-primary ref-btn-save">
+              <span>➕</span> <span>Ajouter</span>
+            </button>
+            <button type="button" id="ref-cancel-btn" onclick="resetRefForm()" class="btn-danger ref-btn-cancel" style="display:none;">
+              Annuler
+            </button>
+          </div>
         </form>
 
-        <!-- TABLEAU D'AFFICHAGE DES DONNÉES -->
-        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px;">
-          <table class="cotes-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
-            <thead style="background-color: #f9fafb; position: sticky; top: 0;">
+        <!-- TABLEAU D'AFFICHAGE -->
+        <div class="ref-table-wrapper">
+          <table class="ref-table">
+            <thead>
               <tr>
-                <th style="padding: 12px; border-bottom: 1px solid #e5e7eb; color: #374151;">Pays</th>
-                <th style="padding: 12px; border-bottom: 1px solid #e5e7eb; color: #374151;">Course</th>
-                <th style="padding: 12px; border-bottom: 1px solid #e5e7eb; color: #374151; text-align: right;">Actions</th>
+                <th>Pays</th>
+                <th>Course</th>
+                <th style="text-align: right;">Actions</th>
               </tr>
             </thead>
             <tbody id="ref-courses-table-body">
-              <tr><td colspan="3" style="text-align:center; padding: 16px; color: #6b7280;">Chargement...</td></tr>
+              <tr><td colspan="3" class="ref-loading">Chargement...</td></tr>
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div class="modal-footer ref-modal-footer">
+        <button class="btn-primary" onclick="closeRefCoursesModal()" style="width: 100%;">Fermer</button>
       </div>
 
     </div>
