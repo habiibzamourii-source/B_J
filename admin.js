@@ -935,17 +935,21 @@ function renderRefCoursesTable() {
   if (!tbody) return;
 
   if (currentRefCourses.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:15px; color:#6b7280;">Aucun enregistrement trouvé.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3" class="ref-loading">Aucun enregistrement trouvé.</td></tr>';
     return;
   }
 
   tbody.innerHTML = currentRefCourses.map(item => `
-    <tr style="border-bottom: 1px solid #f3f4f6;">
-      <td style="padding: 8px 10px;"><strong>${item.pays}</strong></td>
-      <td style="padding: 8px 10px;"><span style="background: #e0e7ff; color: #4338ca; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">${item.course}</span></td>
-      <td style="padding: 8px 10px; text-align: right;">
-        <button onclick="prepareEditRef(${item.id}, '${item.pays.replace(/'/g, "\\'")}', '${item.course.replace(/'/g, "\\'")}')" style="background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-right: 4px;">✏️ Modifier</button>
-        <button onclick="deleteRefCourse(${item.id})" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">🗑️</button>
+    <tr>
+      <td><span class="ref-badge-pays">${item.pays}</span></td>
+      <td><span class="ref-badge-course">${item.course}</span></td>
+      <td class="ref-actions-cell">
+        <button type="button" class="ref-btn-action ref-btn-edit" onclick="prepareEditRef(${item.id}, '${item.pays.replace(/'/g, "\\'")}', '${item.course.replace(/'/g, "\\'")}')">
+          ✏️ <span>Modifier</span>
+        </button>
+        <button type="button" class="ref-btn-action ref-btn-delete" onclick="deleteRefCourse(${item.id})">
+          🗑️
+        </button>
       </td>
     </tr>
   `).join('');
