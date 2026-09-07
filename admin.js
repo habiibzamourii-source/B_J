@@ -888,3 +888,147 @@ document.getElementById('search-input')?.addEventListener('input', handleSearch)
 switchTab(currentTab);
 loadAllData();
 initRealtime();
+
+// ==========================================
+// GESTION NATIVE DU RÉFÉRENTIEL PAYS & COURSES
+// ==========================================
+
+let currentRefCourses = [];
+
+// 1. Ouvrir et Fermer la Modale
+function openRefCoursesModal() {
+  const modal = document.getElementById('ref-modal-overlay');
+  if (modal) {
+    modal.style.display = 'flex';
+    loadRefCourses();
+  }
+}
+
+function closeRefCoursesModal() {
+  const modal = document.getElementById('ref-modal-overlay');
+  if (modal) {
+    modal.style.display = 'none';
+    resetRefForm();
+  }
+}
+
+// 2. Charger les données depuis la table Supabase `ref_courses`
+async function loadRefCourses() {
+  try {
+    const { data, error } = await supabaseClient
+      .from('courses')
+      .select('*')
+      .order('id', { ascending: false });
+
+    if (error) throw error;
+
+    currentRefCourses = data || [];
+    renderRefCoursesTable();
+  } catch (err) {
+    console.error("Erreur de chargement courses :", err.message);
+  }
+}
+
+// 3. Rendu HTML du tableau
+function renderRefCoursesTable() {
+  const tbody = document.getElementById('ref-courses-table-body');
+  if (!tbody) return;
+
+  if (currentRefCourses.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:15px; color:#6b7280;">Aucun enregistrement trouvé.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = currentRefCourses.map(item => `
+    <tr style="border-bottom: 1px solid #f3f4f6;">
+      <td style="padding: 8px 10px;"><strong>${item.pays}</strong></td>
+      <td style="padding: 8px 10px;"><span style="background: #e0e7ff; color: #4338ca; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">${item.course}</span></td>
+      <td style="padding: 8px 10px; text-align: right;">
+        <button onclick="prepareEditRef(${item.id}, '${item.pays.replace(/'/g, "\\'")}', '${item.course.replace(/'/g, "\\'")}')" style="background: #3b82f6; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-right: 4px;">✏️ Modifier</button>
+        <button onclick="deleteRefCourse(${item.id})" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// 4. Ajouter ou Modifier (Insert / Update)
+async function handleSaveRefCourse(e) {
+  e.preventDefault();
+
+  const id = document.getElementById('ref-id').value;
+  const pays = document.getElementById('ref-pays').value.trim();
+  const course = document.getElementById('ref-course').value.trim();
+
+  if (!pays || !course) return;
+
+  try {
+    if (id) {
+      // UPDATE
+      const { error } = await supabaseClient
+        .from('courses')
+        .update({ pays: pays, course: course })
+        .eq('id', id);
+
+      if (error) throw error;
+    } else {
+      // INSERT
+      const { error } = await supabaseClient
+        .from('courses')
+        .insert([{ pays: pays, course: course }]);
+
+      if (error) throw error;
+    }
+
+    resetRefForm();
+    await loadRefCourses();
+  } catch (err) {
+    alert("Erreur lors de l'enregistrement : " + err.message);
+  }
+}
+
+// 5. Préparer l'édition dans le formulaire
+function prepareEditRef(id, pays, course) {
+  document.getElementById('ref-id').value = id;
+  document.getElementById('ref-pays').value = pays;
+  document.getElementById('ref-course').value = course;
+
+  document.getElementById('ref-submit-btn').innerText = "💾 Mettre à jour";
+  document.getElementById('ref-cancel-btn').style.display = "inline-block";
+}
+
+// 6. Réinitialiser le formulaire
+function resetRefForm() {
+  const form = document.getElementById('course-form');
+  if (form) form.reset();
+  
+  document.getElementById('ref-id').value = '';
+  document.getElementById('ref-submit-btn').innerText = "➕ Ajouter";
+  document.getElementById('ref-cancel-btn').style.display = "none";
+}
+
+// 7. Supprimer une ligne
+async function deleteRefCourse(id) {
+  if (!confirm("Voulez-vous supprimer cet élément ?")) return;
+
+  try {
+    const { error } = await supabaseClient
+      .from('courses')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    await loadRefCourses();
+  } catch (err) {
+    alert("Erreur de suppression : " + err.message);
+  }
+}
+
+// 8. Auto-abonnement aux changements Supabase Realtime (Optionnel mais recommandé)
+if (typeof supabaseClient !== 'undefined') {
+  supabaseClient
+    .channel('public:courses')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'courses' }, () => {
+      loadRefCourses();
+    })
+    .subscribe();
+}
