@@ -584,3 +584,350 @@ body {
     font-size: 1rem;
   }
 } 
+/* ==========================================
+   MODALE RÉFÉRENTIEL PAYS & COURSES (MOBILE FIRST)
+   ========================================== */
+
+.ref-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.ref-modal-content {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 580px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 85vh;
+  border: 1px solid var(--border);
+  position: relative;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-drag-handle {
+  display: none;
+  width: 40px;
+  height: 4px;
+  background: #cbd5e1;
+  border-radius: 4px;
+  margin: 8px auto 0 auto;
+}
+
+.ref-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1.5px solid #f1f5f9;
+  background: #ffffff;
+}
+
+.ref-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ref-header-icon {
+  font-size: 1.5rem;
+  background: #eff6ff;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.ref-modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.ref-header-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.ref-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #fafafa;
+}
+
+/* FORMULAIRE */
+.ref-form {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ref-form-inputs {
+  display: flex;
+  gap: 12px;
+}
+
+.ref-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ref-input-group label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+.ref-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #ffffff;
+  transition: var(--transition);
+}
+
+.ref-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.ref-form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.ref-btn-save {
+  min-height: 42px;
+  padding: 0 20px;
+}
+
+.ref-btn-cancel {
+  min-height: 42px;
+  padding: 0 16px;
+}
+
+/* TABLEAU DES DONNÉES */
+.ref-table-wrapper {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  max-height: 280px;
+  overflow-y: auto;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ref-table th {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  padding: 12px 14px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #475569;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--border);
+  z-index: 2;
+}
+
+.ref-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.95rem;
+  color: #0f172a;
+  vertical-align: middle;
+}
+
+.ref-table tr:hover {
+  background: #f8fafc;
+}
+
+.ref-badge-course {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.ref-badge-pays {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.ref-actions-cell {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.ref-btn-action {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition);
+}
+
+.ref-btn-edit {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.ref-btn-edit:hover {
+  background: #dbeafe;
+}
+
+.ref-btn-delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.ref-btn-delete:hover {
+  background: #fee2e2;
+}
+
+.ref-loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.ref-modal-footer {
+  padding: 12px 20px;
+  border-top: 1.5px solid #f1f5f9;
+  background: #ffffff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* RESPONSIVE DESIGN MOBILE (< 600px) */
+@media (max-width: 600px) {
+  .ref-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .ref-modal-content {
+    max-width: 100vw;
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    animation: slideUpMobile 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mobile-drag-handle {
+    display: block;
+  }
+
+  .ref-form-inputs {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ref-input {
+    min-height: 46px;
+    font-size: 1rem;
+  }
+
+  .ref-form-actions {
+    flex-direction: column;
+  }
+
+  .ref-btn-save, .ref-btn-cancel {
+    width: 100%;
+    min-height: 46px;
+  }
+
+  /* Transformation du Tableau en "Cards" sur mobile */
+  .ref-table, .ref-table tbody, .ref-table tr, .ref-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .ref-table thead {
+    display: none;
+  }
+
+  .ref-table tr {
+    border-bottom: 1px solid var(--border);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .ref-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .ref-table td {
+    padding: 0;
+    border: none;
+    width: auto;
+  }
+
+  .ref-actions-cell {
+    width: 100%;
+    margin-top: 8px;
+    justify-content: flex-end;
+  }
+
+  .ref-btn-action {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@keyframes slideUpMobile {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
