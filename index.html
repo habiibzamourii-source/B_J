@@ -95,6 +95,11 @@
       <div class="navbar-left">
         <button class="btn-toggle-sidebar" onclick="toggleSidebar()">☰ Menu</button>
         <span class="live-indicator"><span class="dot"></span> En direct</span>
+
+        <!-- BOUTON AJOUTÉ À CÔTÉ DE "EN DIRECT" -->
+        <button class="btn-primary" onclick="openRefCoursesModal()" style="padding: 6px 12px; font-size: 0.85rem; height: auto; min-height: unset; margin-left: 10px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+          ➕ Gérer Pays / Course
+        </button>
       </div>
 
       <div class="navbar-actions">
@@ -211,6 +216,46 @@
       </section>
 
     </main>
+  </div>
+
+  <!-- MODALE COMPLÈTE GESTION PAYS & COURSES -->
+  <div class="modal-overlay" id="ref-modal-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center;" onclick="closeRefCoursesModal()">
+    <div class="modal-content" onclick="event.stopPropagation()" style="background: #ffffff; padding: 20px; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); font-family: 'Plus Jakarta Sans', sans-serif;">
+      
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #1f2937;">🌍 Gérer les Pays et Courses</h3>
+        <button class="btn-close-modal" onclick="closeRefCoursesModal()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: #6b7280;">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- FORMULAIRE DE SAISIE (AJOUT / MODIFICATION) -->
+        <form id="ref-course-form" onsubmit="handleSaveRefCourse(event)" style="display: flex; gap: 8px; margin-bottom: 20px;">
+          <input type="hidden" id="ref-id">
+          <input type="text" id="ref-pays" placeholder="Pays (ex: France)" required class="cotes-input" style="flex:1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.9rem;">
+          <input type="text" id="ref-course" placeholder="Course (ex: C1)" required class="cotes-input" style="flex:1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.9rem;">
+          
+          <button type="submit" id="ref-submit-btn" class="btn-primary" style="padding: 10px 16px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; white-space: nowrap;">➕ Ajouter</button>
+          <button type="button" id="ref-cancel-btn" onclick="resetRefForm()" class="btn-danger" style="display:none; padding: 10px 16px; background-color: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Annuler</button>
+        </form>
+
+        <!-- TABLEAU D'AFFICHAGE DES DONNÉES -->
+        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px;">
+          <table class="cotes-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+            <thead style="background-color: #f9fafb; position: sticky; top: 0;">
+              <tr>
+                <th style="padding: 12px; border-bottom: 1px solid #e5e7eb; color: #374151;">Pays</th>
+                <th style="padding: 12px; border-bottom: 1px solid #e5e7eb; color: #374151;">Course</th>
+                <th style="padding: 12px; border-bottom: 1px solid #e5e7eb; color: #374151; text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ref-courses-table-body">
+              <tr><td colspan="3" style="text-align:center; padding: 16px; color: #6b7280;">Chargement...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <script src="admin.js"></script>
