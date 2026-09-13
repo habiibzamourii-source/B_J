@@ -930,4 +930,16 @@ body {
 @keyframes slideUpMobile {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
+}  
+
+@keyframes clignoteRouge {
+  0% { opacity: 1; color: #ef4444; }
+  50% { opacity: 0.2; color: #ef4444; }
+  100% { opacity: 1; color: #ef4444; }
 }
+
+.clignotante {
+  font-weight: 800;
+  animation: clignoteRouge 1s infinite ease-in-out;
+}
+
