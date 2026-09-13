@@ -933,10 +933,11 @@ body {
 }  
 
 @keyframes clignoteRouge {
-  0% { opacity: 1; color: #ef4444; }
-  50% { opacity: 0.2; color: #ef4444; }
-  100% { opacity: 1; color: #ef4444; }
+  0% { opacity: 1; color: #44ef5e; }
+  50% { opacity: 0.2; color: #00e971; }
+  100% { opacity: 1; color: #00f832; }
 }
+
 
 .clignotante {
   font-weight: 800;
